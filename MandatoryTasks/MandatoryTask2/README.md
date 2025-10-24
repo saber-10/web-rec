@@ -42,6 +42,7 @@ The notebook builds a regression model to predict y using the features w and x.
 2. Model training
 
 • Implemented a regression algorithm
+
 • i've fitted a sine wave
 
 3. Evaluation
