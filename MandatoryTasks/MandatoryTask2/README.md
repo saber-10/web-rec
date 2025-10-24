@@ -1,163 +1,63 @@
 
-# TASK 1.C: QUESTION ANSWERING (NEWSQA DATASET)
+# TASK 2 REGRESSION 
+You are given a very simple dataframe with 3 variables w, x and y. You need to predict y, given w and x.
 
-This task experiments with building and fine-tuning a Question Answering (QA) model using the NewsQA dataset.
+## 🚀 NOTEBOOK OVERVIEW
+The notebook performs a complete end-to-end workflow:
 
-A transformer-based architecture  is fine-tuned to extract precise answers from news article passages.
+1. Dataset loading and inspection
 
-## 🧠 Transformer for Question Answering
+2. Exploratory Data Analysis (EDA) and visualization
 
-The model fine-tuned in this task is based on Hugging Face Transformer, a pre-trained RoBERTa-base (or BERT-base) architecture. RoBERTa stands for Robustly Optimized BERT Approach.
+3. Model training and evaluation
 
+4. Performance Evaluation
+ 
+## 📊 DATASET DESCRIPTION
 
-It is fine-tuned on the NewsQA dataset — a large collection of news articles and associated comprehension-style question.
+This Dataset contains: 
+• x: 1st input feature, continious 
 
-## 🚀 PROJECT OVERVIEW
+• w: 2nd input feature, contains 10 unique value
 
-The notebook builds a complete extractive QA pipeline using the Hugging Face ecosystem.
+• y: output
 
-It performs:
+## 🔍 EXPLORATORY DATA ANALYSIS (EDA)
 
-1. Dataset loading from Hugging Face Datasets
+This is the main step in this task. it reveals so much about the dataset. i've plotted all points wrt y and it didnt make any sense. so then i've separated all the unique values of w and then plotted the graph between x and y for all the unique values. 
 
-2. Data preprocessing and context-question alignment
+and after plotting for all unique values of w, you can clearly see that all the graphs resembles a sine or cosine wave. 
+after that, i tried to do some feature engineering by combining w and x (w*x) and then plotted the graph and it reveals another great feature. the solution model was very clear after this. 
 
-3. Tokenization and feature creation with overflow handling
+## 🧠 MODEL DEVELOPMENT
 
-4. Fine-tuning of a transformer model using Trainer
+The notebook builds a regression model to predict y using the features w and x.
 
-6. Inference for custom question-answering
+### Steps:
 
-## 📦 DEPENDENCIES
+1. Data preprocessing
 
-The following libraries were used:
+• Splitting into training and test sets
 
-• transformers — for model, tokenizer, and training utilities
+2. Model training
 
-• datasets — to load and manage the NewsQA dataset
+• Implemented a regression algorithm
+• i've fitted a sine wave
 
-• torch — PyTorch backend for training
+3. Evaluation
 
-• numpy & pandas — for data manipulation
-
-• tqdm — for progress visualization
-
-Install all dependencies:
-
-````markdown
-pip install transformers datasets torch evaluate pandas numpy tqdm
-````
- ## 🪜 PIPELINE STEPS
-
-### 1. LOADING THE DATASET
-
-Source: lucadiliello/newsqa from Hugging Face Datasets
-
-Domain: News articles and comprehension-style questions
-
-#### Structure:
-
-1. context: context for the given question
-
-2. question: question
-
-3. answer: answer for the question
-
-4. key: unique value to identify example
-
-5. label: dict containing start and end of answer
-
-````markdown
-from datasets import load_dataset
-ds = load_dataset("lucadiliello/newsqa")
-````
-
-### 2. 🧹 DATA PREPARATION & PREPROCESSING
-
-This is the most crucial stage of the QA pipeline. It ensures that the question–context pairs are correctly aligned and that each tokenized sample is properly labeled for training the model to extract the correct answer span.
-
-#### 🔧 Key Steps:
-
-1. Question Cleaning — Removes leading/trailing spaces from the question text.
-
-2. Tokenization with Sliding Window —
-
-• Uses the tokenizer to split text into tokens with overlap (stride=128).
-
-• Ensures that long contexts exceeding max_length=384 are chunked properly.
-
-3. Overflow Mapping — Keeps track of which tokenized chunks belong to which original sample (overflow_to_sample_mapping).
-
-4. Offset Mapping — For each sub-token returned by the tokenizer, the offset mapping gives us a tuple indicating the sub-token’s start position and end position relative to the original token it was split from.
-
-5. Answer Alignment —
-
-• For each tokenized chunk, locates where the answer text lies.
-
-• Converts those into token indices (start_positions and end_positions) for model training.
-
-6. Output — Returns a dictionary containing:
-
-• Tokenized input (input_ids, attention_mask, etc.)
-
-• Corresponding start_positions and end_positions labels.
-
-### 3. MODEL FINE-TUNING
-
-#### Base Model:
-
-• Architecture: RoBERTa / BERT (encoder-only transformer)
-
-• Task: Extractive Question Answering
-
-• Pre-trained model: roberta-base
-
-• Parameters: ~125M
-
-#### Training Parameters 
-
-````markdown
-from transformers import TrainingArguments
-
-args = TrainingArguments(
-    "roberta-base-finetuned",
-    save_strategy="epoch",
-    learning_rate=2e-5,
-    num_train_epochs=1,
-    weight_decay=0.01,
-    fp16=True,
-    gradient_accumulation_steps=2,
-)
-````
-
-### 5. MAKING PREDICTIONS
-
-````markdown
-qa_pipeline = pipeline("question-answering", model=model, tokenizer=tokenizer)
-
-context = "amey have music club audition tommorow and he's gona get fucked real bad"
-question = ["what does amey have tommorow?"]
-
-result = qa_pipeline(
-    question=question,
-    context=context
-)
-print(result["answer"])
-#output - music club audition
-````
+• Metrics such as Mean Squared Error (MSE), Mean Absolute Error (MAE), or R² Score
 
 ## 🌟 FUTURE IMPROVEMENTS
 
-• Use larger architectures (RoBERTa-large, DeBERTa-v3) for improved comprehension
-
-• Integrate early stopping and learning rate scheduling
-
-• Apply mixed-precision training (fp16) for faster computation
+i wanted to implement a PINN model in this and compare the result with the regression one, i couldn't do it because of time :(
 
 ## 🧑‍💻 AUTHOR
 
 Amey Bhagat
 
 📧 amey.241ds009@gmail.com
+
+
 
 
